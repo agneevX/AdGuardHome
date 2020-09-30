@@ -164,6 +164,12 @@ OUT_DIR=/opt
 
 download $URL $PKG_NAME || error_exit "ERROR: Can not download package"
 
+echo "Please enter a root directory AdGuard Home will be unpacked to or just press Enter to use default directory /opt:"
+read USER_OUT_DIR
+if [ "$USER_OUT_DIR" != "" ]; then
+	OUT_DIR=$USER_OUT_DIR
+fi
+
 unpack $PKG_NAME $OUT_DIR $PKG_EXT || error_exit "ERROR: Can not unpack the package"
 
 $OUT_DIR/AdGuardHome/AdGuardHome -s install || error_exit "ERROR: Can not install AdGuardHome as a service"
