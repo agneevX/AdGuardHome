@@ -125,7 +125,7 @@ function download()
 	if [ $(which curl) ]; then
 		curl $1 --output $2 || return 1
 	elif [ $(which wget) ]; then
-		wget $1 -o $2 || return 1
+		wget $1 -O $2 || return 1
 	else
 		echo "need curl or wget"
 		return 1
@@ -165,7 +165,7 @@ OUT_DIR=/opt/AdGuardHome
 
 download $URL $PKG_NAME || error_exit "ERROR: Can not download package"
 
-echo "Please enter a root directory AdGuard Home will be unpacked to or just press Enter to use default directory /opt:"
+echo "AdGuard Home directory [/opt/AdGuardHome]:"
 read USER_OUT_DIR
 if [ "$USER_OUT_DIR" != "" ]; then
 	OUT_DIR=$USER_OUT_DIR
