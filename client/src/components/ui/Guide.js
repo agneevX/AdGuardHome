@@ -82,8 +82,7 @@ const dnsPrivacyList = [{
         {
             label: 'setup_dns_privacy_4',
             components: {
-                dot: <code />,
-                doh: <code />,
+                highlight: <code />,
             },
             renderComponent: renderMobileconfigInfo,
         },
