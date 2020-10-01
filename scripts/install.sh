@@ -137,6 +137,7 @@ function download()
 function unpack()
 {
 	echo "unpacking package from $1 -> $2"
+	mkdir -p $2
 	if [ "$3" = "zip" ]; then
 		unzip $1 -d $2 || return 1
 	elif [ "$3" = "tar.gz" ]; then
@@ -160,7 +161,7 @@ PKG_EXT=$(package_extension)
 PKG_NAME=AdGuardHome_${OS}_$CPU.$PKG_EXT
 CHANNEL=release
 URL=https://static.adguard.com/adguardhome/$CHANNEL/$PKG_NAME
-OUT_DIR=/opt
+OUT_DIR=/opt/AdGuardHome
 
 download $URL $PKG_NAME || error_exit "ERROR: Can not download package"
 
@@ -171,8 +172,12 @@ if [ "$USER_OUT_DIR" != "" ]; then
 fi
 
 unpack $PKG_NAME $OUT_DIR $PKG_EXT || error_exit "ERROR: Can not unpack the package"
+mv $OUT_DIR/AdGuardHome $OUT_DIR/AdGuardHome.dir \
+	&& mv $OUT_DIR/AdGuardHome.dir/* $OUT_DIR \
+	&& rmdir $OUT_DIR/AdGuardHome.dir \
+	|| error_exit "ERROR: Can not move files from $OUT_DIR/AdGuardHome"
 
-$OUT_DIR/AdGuardHome/AdGuardHome -s install || error_exit "ERROR: Can not install AdGuardHome as a service"
+$OUT_DIR/AdGuardHome -s install || error_exit "ERROR: Can not install AdGuardHome as a service"
 
 rm $PKG_NAME
 echo "Installation script is successfully finished"
