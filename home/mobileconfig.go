@@ -1,16 +1,17 @@
 package home
 
 import (
+	"fmt"
 	"net/http"
 
+	uuid "github.com/satori/go.uuid"
 	"howett.net/plist"
 )
 
 type DNSSettings struct {
-	DNSProtocol     string
-	ServerURL       string `plist:",omitempty"`
-	ServerName      string `plist:",omitempty"`
-	ServerAddresses []string
+	DNSProtocol string
+	ServerURL   string `plist:",omitempty"`
+	ServerName  string `plist:",omitempty"`
 }
 
 type PayloadContent = struct {
@@ -35,24 +36,32 @@ type MobileConfig = struct {
 	PayloadVersion           int
 }
 
-func getMobileConfig(w http.ResponseWriter, d DNSSettings) []byte {
+func genUUIDv4() string {
+	return uuid.NewV4().String()
+}
+
+func getMobileConfig(w http.ResponseWriter, r *http.Request, d DNSSettings) []byte {
+	PayloadContentUUID := genUUIDv4()
+	PayloadIdentifier := genUUIDv4()
+	PayloadUUID := genUUIDv4()
+
 	data := MobileConfig{
 		PayloadContent: []PayloadContent{{
-			Name:               "AdGuard DNS over HTTPS",
-			PayloadDescription: "Configures device to use AdGuard DNS",
-			PayloadDisplayName: "AdGuard DNS",
-			PayloadIdentifier:  "com.apple.dnsSettings.managed.767A11FC-31D2-4950-815E-B37B15448CA2",
+			Name:               fmt.Sprintf("%s DNS over %s", r.Host, d.DNSProtocol),
+			PayloadDescription: "Configures device to use AdGuard Home",
+			PayloadDisplayName: "AdGuard Home",
+			PayloadIdentifier:  fmt.Sprintf("com.apple.dnsSettings.managed.%s", PayloadContentUUID),
 			PayloadType:        "com.apple.dnsSettings.managed",
-			PayloadUUID:        "767A11FC-31D2-4950-815E-B37B15448CA2",
+			PayloadUUID:        PayloadContentUUID,
 			PayloadVersion:     1,
 			DNSSettings:        d,
 		}},
-		PayloadDescription:       "Adds AdGuard DNS toBig Sur and iOS 14 or newer systems",
-		PayloadDisplayName:       "AdGuard DNS",
-		PayloadIdentifier:        "E3E3CB8B-C59E-486B-A713-D765328DB2A2",
+		PayloadDescription:       "Adds AdGuard Home to Big Sur and iOS 14 or newer systems",
+		PayloadDisplayName:       "AdGuard Home",
+		PayloadIdentifier:        PayloadIdentifier,
 		PayloadRemovalDisallowed: false,
 		PayloadType:              "Configuration",
-		PayloadUUID:              "F2609BEA-93D6-4966-8487-33713DBCB644",
+		PayloadUUID:              PayloadUUID,
 		PayloadVersion:           1,
 	}
 
@@ -65,25 +74,23 @@ func getMobileConfig(w http.ResponseWriter, d DNSSettings) []byte {
 	return mobileconfig
 }
 
-func handleMobileConfig(w http.ResponseWriter, d DNSSettings) {
-	mobileconfig := getMobileConfig(w, d)
+func handleMobileConfig(w http.ResponseWriter, r *http.Request, d DNSSettings) {
+	mobileconfig := getMobileConfig(w, r, d)
 
 	w.Header().Set("Content-Type", "application/xml")
 	w.Write(mobileconfig)
 }
 
 func handleMobileConfigDoh(w http.ResponseWriter, r *http.Request) {
-	handleMobileConfig(w, DNSSettings{
-		DNSProtocol:     "HTTPS",
-		ServerURL:       "https://dns.adguard.com/dns-query",
-		ServerAddresses: []string{getDNSEncryption().https},
+	handleMobileConfig(w, r, DNSSettings{
+		DNSProtocol: "HTTPS",
+		ServerURL:   fmt.Sprintf("https://%s", r.Host),
 	})
 }
 
 func handleMobileConfigDot(w http.ResponseWriter, r *http.Request) {
-	handleMobileConfig(w, DNSSettings{
-		DNSProtocol:     "TLS",
-		ServerName:      "dns.adguard.com",
-		ServerAddresses: []string{getDNSEncryption().tls},
+	handleMobileConfig(w, r, DNSSettings{
+		DNSProtocol: "TLS",
+		ServerName:  r.Host,
 	})
 }
