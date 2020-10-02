@@ -99,8 +99,8 @@ func registerControlHandlers() {
 	httpRegister(http.MethodPost, "/control/update", handleUpdate)
 	httpRegister(http.MethodGet, "/control/profile", handleGetProfile)
 
-	httpRegister(http.MethodGet, "/apple/doh.mobileconfig", handleMobileConfigDoh)
-	httpRegister(http.MethodGet, "/apple/dot.mobileconfig", handleMobileConfigDot)
+	http.HandleFunc("/apple/doh.mobileconfig", postInstall(handleMobileConfigDoh))
+	http.HandleFunc("/apple/dot.mobileconfig", postInstall(handleMobileConfigDot))
 	RegisterAuthHandlers()
 }
 
