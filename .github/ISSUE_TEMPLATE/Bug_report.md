@@ -7,36 +7,39 @@ Have a question or an idea? Please search it [on our forum](https://github.com/A
 
 ### Prerequisites
 
-Please answer the following questions for yourself before submitting an issue. **YOU MAY DELETE THE PREREQUISITES SECTION.**
+<!--- Please answer the following questions for yourself before submitting an issue. **YOU MAY DELETE THE PREREQUISITES SECTION.** -->
 
 - [ ] I am running the latest version
-- [ ] I checked the documentation and found no answer
-- [ ] I checked to make sure that this issue has not already been filed
+- [ ] I've checked the documentation and found no answer
+- [ ] I've checked to make sure that this issue has not already been filed
 
-### Issue Details
+### Environment
 
 <!-- Please include all relevant details about the environment you experienced the bug in.  If possible, include the result of running `./AdGuardHome -v --version` from the installation directory. -->
 
-* **Version of AdGuard Home server:**
+* Version of AdGuard Home server:
   * <!-- (e.g. v0.123.4) -->
-* **How did you install AdGuard Home:**
+* How did you install AdGuard Home:
   * <!-- (e.g. Built from source, Snapcraft, Docker, Github releases, etc.) -->
-* **How did you setup DNS configuration:**
+* How did you setup DNS configuration:
   * <!-- (System/Router/IoT) -->
-* **If it's a router or IoT, please write device model:**
+* If router or IoT, please mention device model:
   * <!-- (e.g. Raspberry Pi 3 Model B) -->
-* **CPU architecture:**
+* CPU architecture:
   * <!-- (e.g. AMD64, MIPS, etc.) -->
-* **Operating system and version:**
+* Operating system and version:
   * <!-- (e.g. Ubuntu 18.04.1) -->
 
-### Expected Behavior
-<!-- A clear and concise description of what you expected to happen. -->
+### Issue details
 
-### Actual Behavior
+<!-- A clear and concise description of the details of your issue -->
+
+### Expected behavior
+
 <!-- A clear and concise description of what actually happened. -->
 
 ### Screenshots
+
 <!-- If applicable, add screenshots to help explain your problem. -->
 
 <details><summary>Screenshot:</summary>
@@ -45,5 +48,6 @@ Please answer the following questions for yourself before submitting an issue. *
 
 </details>
 
-### Additional Information
+### Additional info
+
 <!-- Add any other context about the problem here. -->
